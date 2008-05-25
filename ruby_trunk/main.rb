@@ -1,5 +1,6 @@
-#!/usr/bin/env ruby
 
+#!/usr/bin/env ruby
+#test
 require 'pathname'
 
 p = Pathname.new($0)
