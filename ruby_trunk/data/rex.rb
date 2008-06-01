@@ -36,7 +36,7 @@ def add_regexp(line, regexp_list, macro_list)
 	return if line =~ /^\s*$/ #empty line
 	split_location=split_regexp_line(line)
 	new_regexp="\\A"+line[0..split_location].strip.rstrip
-	new_token=line[(split_location+1)..-1].strip.rstrip
+	new_token=(line[(split_location+1)..-1]!= nil) ? (line[(split_location+1)..-1].strip.rstrip) : ""
 	regexp_list << [Regexp.new(new_regexp),new_token]
 end
 
@@ -86,7 +86,7 @@ module Rex
 #{regexp_identifiers}
 				regexp_candidates.sort! do |a,b|
 					if a[1]==b[1]
-						a[0]<=>b[0]
+						b[0]<=>a[0]
 					else
 						a[1]<=>b[1]
 					end
