@@ -1,0 +1,8 @@
+general format: [parameter_name_symbol, parameter_info]
+
+parameters:
+:number - num - course number
+:first_moed - [day, date] - day is hebrew letter for day, date is in dd/mm/yy format
+:second_moed - [day, date] - day is hebrew letter for day, date is in dd/mm/yy format
+:lectures - [lecture_array] - where each entry in lecture_array is of the form:
+	[lecture_group_num, ]

@@ -117,6 +117,9 @@ module Rex
 		def empty?
 			return @q.empty?
 		end
+		def each_token
+			@q.each{|x| yield(x)}
+		end
 		def run
 			until (input_str = gets).nil?
 				parse(input_str)
