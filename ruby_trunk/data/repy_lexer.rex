@@ -43,6 +43,7 @@ exception_2			("| 2.\327\231\327\251 \327\251\327\240\327\231 \327\252\327\250\3
 {second_moed}					SECOND_MOED
 \-						SEPERATOR
 {possible_weekdays}\'{digit}+\.{digit}+-{digit}+\.{digit}+ DAY_AND_TIME_RANGE
+({possible_weekdays}\'{digit}+\.{digit}+) HALF_DAY_AND_TIME_RANGE
 {digit}+\.{digit}+-{digit}+\.{digit}+		TIME_RANGE
 #{possible_weekdays}\'				DAY
 #{possible_weekdays}				UNQUOTED_DAY

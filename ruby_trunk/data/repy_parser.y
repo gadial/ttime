@@ -29,13 +29,19 @@ rule
 	course_name		: course_name WORD		{result << val[1]}
 				| course_name NUMBER		{result << val[1]}
 				| course_name NUM_LETTER_NUM 	{result << val[1]}
+				| course_name SEPERATOR
 				| /* empty */			{result=[]}
 
 	words			: words WORD			{result << val[1]}
 				| words REAL_NUMBER		{result << val[1]}
 				| words NUMBER			{result << val[1]}
 				| words NUM_LETTER_NUM  	{result << val[1]}
+				| words TIME_RANGE	  	{result << val[1]}
+				| words DAY_AND_TIME_RANGE  	{result << val[1]}
+				| words SEPERATOR
 				| WORD				{result=[val[1]]}
+				| NUMBER			{result=[val[1]]}
+				| REAL_NUMBER			{result=[val[1]]}
 
 	lines			: lines line			{result << val[1]}
 				| /* empty */			{result=[]}
@@ -50,10 +56,12 @@ rule
 				| LINE_START_END FIRST_MOED WORD WORD DATE moed_possible_time LINE_START_END {result=[:first_moed,[val[3],val[4]]]}
 				#moed B line
 				| LINE_START_END SECOND_MOED WORD WORD DATE moed_possible_time LINE_START_END {result=[:second_moed,[val[3],val[4]]]}
-				#Lecture information
-				| LINE_START_END possible_number teaching_type DAY_AND_TIME_RANGE lecture_address LINE_START_END
+				#Lecture information with number
+				| LINE_START_END NUMBER not_empty_teaching_type day_and_time_range lecture_address LINE_START_END
+				| LINE_START_END teaching_type day_and_time_range lecture_address LINE_START_END
 				# Empty lecture information
-				| LINE_START_END possible_number teaching_type SEPERATOR LINE_START_END
+				| LINE_START_END NUMBER not_empty_teaching_type SEPERATOR LINE_START_END
+				| LINE_START_END teaching_type SEPERATOR LINE_START_END
 				#special line for course 601410
 #				| LINE_START_END WORD TIME_RANGE WORD possible_number words LINE_START_END
 
@@ -63,21 +71,25 @@ rule
 	any_number		: NUMBER
 				| REAL_NUMBER
 
-	possible_number		: NUMBER		{result = val[0]}
-				| /* empty */		{result = nil}
+	day_and_time_range	: DAY_AND_TIME_RANGE	{result = val[0]}
+				| HALF_DAY_AND_TIME_RANGE WORD	{result = [val[0],val[1]].join(" ")}
 
-	teaching_type		: LECTURE		{result = :lecture}
+	not_empty_teaching_type	: LECTURE		{result = :lecture}
 				| TUTORIAL		{result = :tutorial}
 				| GROUP			{result = :group}
 				| LAB			{result = :lab}
+
+	teaching_type		: not_empty_teaching_type {result = val[0]}
 				| /* empty */		{result = :unknown_teaching_type}
 
 	teacher_title		: LECTURER_IN_CHARGE 	{result = :lecturer_in_charge}
 				| LECTURER		{result = :lecturer}
 				| TA			{result = :ta}
 
-	lecture_address		: NUMBER WORD		{result = [val[0], val[1]]}
+	lecture_address		: NUMBER words		{result = [val[0], val[1]]}
+				| NUM_LETTER_NUM WORD	{result = [val[0], val[1]]}
 				| WORD WORD		{result = [nil,[val[0],val[1]].join(" ")]}
+				| WORD			{result = [nil,val[0]]}
 				| /* empty */
 end
 
