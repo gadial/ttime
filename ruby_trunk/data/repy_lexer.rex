@@ -5,10 +5,15 @@ faculty_second_line		(^\|.*סמסטר.*\|$)
 sports_header_bar		(\+===============================================================\+)
 sports_header_line		(^\|.*מקצועות ספורט.*\|$)
 lecturer_in_charge		( מורה  אחראי :)
+lecturer			(מרצה :)
+ta				(מתרגל :)
 teaching_hours_in_week		(שעות הוראה בשבוע:)
 first_moed			(מועד ראשון :)
 second_moed			(מועד שני   :)
 lecture				(הרצאה:)
+tutorial			(תרגיל:)
+group				(קבוצה:)
+lab				(מעבדה:)
 points				(נק:)
 course_seperator_bar		(\+------------------------------------------\+)
 sport_course_seperator_bar	(\+---------------------------------------------------------------\+)
@@ -18,18 +23,26 @@ digit				([0-9])
 possible_weekdays		(\327[\220\221\222\223\224\225\251])
 
 exception_1			(\| [0-9]\.\327\224\327\224\327\247\327\234\327\224 \327\221\327\242\327\247\327\221\327\225\327\252 \327\224\327\251\327\221\327\231\327\252\327\224 \327\221\327\240\327\225\327\251\327\220 \327\247\327\223\327\236\327\231\327\235  \327\234 \327\220   \|\n\|   \327\227\327\234\327\224 \327\242\327\234 \327\236\327\247\327\246\327\225\327\242 \327\226\327\224\.                       \|\n)
+exception_2			("| 2.\327\231\327\251 \327\251\327\240\327\231 \327\252\327\250\327\222\327\231\327\234\327\231\327\235 :                       |\n|   \327\222'  03.71-03.61 \327\227\327\223\327\250 105.               |\n|   \327\224   03.21-03.11 \327\227\327\223\327\250 405                |\n")
 
 %%
 {faculty_header_bar}\n{faculty_first_line}\n{faculty_second_line}\n{faculty_header_bar} FACULTY_HEADER
 {sports_header_bar}\n{sports_header_line}\n{sports_header_bar}	SPORT_HEADER
 {exception_1}
+{exception_2}
 ({course_seperator_bar}|{sport_course_seperator_bar}) COURSE_SEPERATOR_BAR
 {lecturer_in_charge}				LECTURER_IN_CHARGE
+{lecturer}					LECTURER
+{ta}						TA
 {teaching_hours_in_week}			TEACHING_HOURS_IN_WEEK
-#{lecture}					LECTURE
+{lecture}					LECTURE
+{tutorial}					TUTORIAL
+{group}						GROUP
+{lab}						LAB
 {first_moed}					FIRST_MOED
 {second_moed}					SECOND_MOED
-#{possible_weekdays}\'{digit}+\.{digit}+-{digit}+\.{digit}+ DAY_AND_TIME_RANGE
+\-						SEPERATOR
+{possible_weekdays}\'{digit}+\.{digit}+-{digit}+\.{digit}+ DAY_AND_TIME_RANGE
 {digit}+\.{digit}+-{digit}+\.{digit}+		TIME_RANGE
 #{possible_weekdays}\'				DAY
 #{possible_weekdays}				UNQUOTED_DAY
