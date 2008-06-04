@@ -11,11 +11,16 @@ rule
 
 	faculty			: FACULTY_HEADER courses COURSE_SEPERATOR_BAR {result="Courses:\n #{val[1].inspect}"}
 
-	sport_courses		: SPORT_HEADER courses COURSE_SEPERATOR_BAR
+	sport_courses		: SPORT_HEADER sport_courses COURSE_SEPERATOR_BAR
 
 	courses			: courses course 	{result << val[1]}
 				| /* empty */ 		{result=[]}
 	
+	sport_courses		: sport_courses sport_course 	{result << val[1]}
+				| /* empty */			{result=[]}
+
+	sport_course		: course_header sport_course_body
+
 	course			: course_header course_body {result=Course.new(val[0]+val[1])}
 	
 	course_header		: COURSE_SEPERATOR_BAR course_header_first_line course_header_second_line COURSE_SEPERATOR_BAR {result=val[1]+val[2]}
@@ -65,6 +70,22 @@ rule
 				#special line for course 601410
 #				| LINE_START_END WORD TIME_RANGE WORD possible_number words LINE_START_END
 
+	sport_course_body	: sport_lines
+
+	sport_lines		: sport_lines sport_line
+				| /* empty */
+
+				#general line
+	sport_line		: LINE_START_END words_reversed LINE_START_END {result=[:none,nil]}
+				#empty line
+				| LINE_START_END LINE_START_END
+				#Teacher name line
+				| LINE_START_END INSTRUCTOR words LINE_START_END
+				#Lecture information
+				| LINE_START_END NUMBER sport_course_name day_and_time_range lecture_address LINE_START_END
+				#Lecture information without course name
+				| LINE_START_END day_and_time_range lecture_address LINE_START_END
+
 	moed_possible_time	: WORD REAL_NUMBER {result=val[1]}
 				| /* empty */ {result=[]}
 
@@ -85,12 +106,24 @@ rule
 	teacher_title		: LECTURER_IN_CHARGE 	{result = :lecturer_in_charge}
 				| LECTURER		{result = :lecturer}
 				| TA			{result = :ta}
+				| INSTRUCTOR		{result = :instructor}
 
 	lecture_address		: NUMBER words		{result = [val[0], val[1]]}
 				| NUM_LETTER_NUM WORD	{result = [val[0], val[1]]}
 				| WORD WORD		{result = [nil,[val[0],val[1]].join(" ")]}
 				| WORD			{result = [nil,val[0]]}
 				| /* empty */
+
+	sport_course_name	: WORD sport_course_name
+				| SEPERATOR sport_course_name
+				| WORD
+
+	words_reversed		: WORD words_reversed
+				| SEPERATOR words_reversed
+				| NUMBER words_reversed
+				| WORD
+				| SEPERATOR
+				| NUMBER
 end
 
 ---- header
@@ -132,7 +165,7 @@ end
 ---- inner
 
 	def parse(str)
-		@yydebug=true
+#		@yydebug=true
 		@lexer=Rex::Lexer.new
 		@lexer.parse(str)
 		do_parse
@@ -140,6 +173,6 @@ end
 
 	def next_token
 		token=@lexer.next_token
-		puts token.inspect
+#		puts token.inspect
 		token
 	end

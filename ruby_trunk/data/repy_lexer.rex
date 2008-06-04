@@ -7,6 +7,7 @@ sports_header_line		(^\|.*מקצועות ספורט.*\|$)
 lecturer_in_charge		( מורה  אחראי :)
 lecturer			(מרצה :)
 ta				(מתרגל :)
+instructor			(מדריך:)
 teaching_hours_in_week		(שעות הוראה בשבוע:)
 first_moed			(מועד ראשון :)
 second_moed			(מועד שני   :)
@@ -34,6 +35,7 @@ exception_2			("| 2.\327\231\327\251 \327\251\327\240\327\231 \327\252\327\250\3
 {lecturer_in_charge}				LECTURER_IN_CHARGE
 {lecturer}					LECTURER
 {ta}						TA
+{instructor}					INSTRUCTOR
 {teaching_hours_in_week}			TEACHING_HOURS_IN_WEEK
 {lecture}					LECTURE
 {tutorial}					TUTORIAL
